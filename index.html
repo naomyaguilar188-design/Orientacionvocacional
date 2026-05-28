@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VocaTech – Orientación Vocacional</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --vt-primary:   #4f46e5;
+      --vt-secondary: #7c3aed;
+      --vt-accent:    #06b6d4;
+      --vt-light:     #f0f4ff;
+    }
+
+    body {
+      background: linear-gradient(135deg, #e0e7ff 0%, #f0fdff 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    /* ── Header ── */
+    .vt-header {
+      background: linear-gradient(135deg, var(--vt-primary), var(--vt-secondary));
+      color: #fff;
+      padding: 2.5rem 1rem 2rem;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(79,70,229,.35);
+    }
+    .vt-header h1 {
+      font-size: clamp(2.2rem, 6vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+    .vt-header p {
+      font-size: 1.1rem;
+      opacity: .88;
+    }
+
+    /* ── Card container ── */
+    .vt-card {
+      background: #fff;
+      border-radius: 1.25rem;
+      box-shadow: 0 8px 32px rgba(79,70,229,.12);
+      padding: 2.5rem 2rem;
+      max-width: 680px;
+      margin: 2.5rem auto;
+    }
+
+    /* ── Progress bar ── */
+    .progress { height: 10px; border-radius: 99px; }
+    .progress-bar {
+      background: linear-gradient(90deg, var(--vt-primary), var(--vt-accent));
+      transition: width .5s ease;
+    }
+
+    /* ── Question text ── */
+    .vt-question-num {
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--vt-primary);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .vt-question-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e1b4b;
+      margin: .5rem 0 1.5rem;
+      line-height: 1.4;
+    }
+
+    /* ── Option buttons ── */
+    .vt-option {
+      display: flex;
+      align-items: flex-start;
+      gap: .85rem;
+      width: 100%;
+      text-align: left;
+      background: var(--vt-light);
+      border: 2px solid transparent;
+      border-radius: .85rem;
+      padding: 1rem 1.1rem;
+      margin-bottom: .75rem;
+      cursor: pointer;
+      transition: all .2s ease;
+      font-size: 1rem;
+      color: #1e1b4b;
+    }
+    .vt-option:hover {
+      border-color: var(--vt-primary);
+      background: #e0e7ff;
+      transform: translateX(4px);
+    }
+    .vt-option.selected {
+      border-color: var(--vt-primary);
+      background: #e0e7ff;
+      box-shadow: 0 0 0 3px rgba(79,70,229,.18);
+    }
+    .vt-option .badge-letter {
+      flex-shrink: 0;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--vt-primary);
+      color: #fff;
+      font-weight: 700;
+      font-size: .9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Navigation buttons ── */
+    .btn-vt-primary {
+      background: linear-gradient(135deg, var(--vt-primary), var(--vt-secondary));
+      color: #fff;
+      border: none;
+      border-radius: .75rem;
+      padding: .65rem 1.8rem;
+      font-weight: 600;
+      transition: opacity .2s, transform .15s;
+    }
+    .btn-vt-primary:hover  { opacity: .9; transform: translateY(-1px); color: #fff; }
+    .btn-vt-primary:active { transform: translateY(0); }
+    .btn-vt-primary:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+    .btn-vt-outline {
+      background: transparent;
+      color: var(--vt-primary);
+      border: 2px solid var(--vt-primary);
+      border-radius: .75rem;
+      padding: .6rem 1.6rem;
+      font-weight: 600;
+      transition: all .2s;
+    }
+    .btn-vt-outline:hover { background: var(--vt-light); color: var(--vt-primary); }
+
+    /* ── Result card ── */
+    #result-section { display: none; }
+
+    .vt-result-icon {
+      font-size: 4rem;
+      margin-bottom: .5rem;
+    }
+    .vt-result-title {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--vt-primary);
+    }
+    .vt-result-desc {
+      font-size: 1.05rem;
+      color: #374151;
+      margin-top: .5rem;
+    }
+
+    /* Score bars */
+    .score-label {
+      font-weight: 600;
+      font-size: .95rem;
+      color: #374151;
+    }
+    .score-bar-wrap { background: #e5e7eb; border-radius: 99px; height: 14px; overflow: hidden; }
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width 1s ease;
+    }
+    .bar-A { background: linear-gradient(90deg, #4f46e5, #818cf8); }
+    .bar-B { background: linear-gradient(90deg, #0891b2, #06b6d4); }
+    .bar-C { background: linear-gradient(90deg, #059669, #34d399); }
+
+    /* Specialty cards */
+    .spec-card {
+      border-radius: 1rem;
+      padding: 1.1rem 1.3rem;
+      margin-bottom: .75rem;
+      border-left: 5px solid;
+    }
+    .spec-card.winner { border-left-color: var(--vt-primary); background: #eef2ff; }
+    .spec-card.runner { border-left-color: #d1d5db; background: #f9fafb; }
+
+    /* Animations */
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-in { animation: fadeSlideIn .4s ease both; }
+
+    /* ── Intro section ── */
+    #intro-section .vt-intro-icon { font-size: 3.5rem; }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════ HEADER ══════════════ -->
+  <header class="vt-header">
+    <h1><i class="bi bi-mortarboard-fill me-2"></i>VocaTech</h1>
+    <p class="mb-0">Descubre la especialidad que mejor se adapta a tu perfil</p>
+  </header>
+
+  <!-- ══════════════ MAIN CARD ══════════════ -->
+  <main class="container px-3">
+    <div class="vt-card animate-in">
+
+      <!-- ── INTRO ── -->
+      <section id="intro-section" class="text-center py-2">
+        <div class="vt-intro-icon mb-3">🎯</div>
+        <h2 class="fw-bold" style="color:#1e1b4b;">¿Cuál es tu especialidad ideal?</h2>
+        <p class="text-muted mt-2 mb-4">
+          Responde <strong id="total-count"></strong> preguntas breves y descubre si tu perfil
+          encaja mejor con <strong>Desarrollo Web</strong>, <strong>Logística</strong>
+          o <strong>Contabilidad</strong>.
+        </p>
+        <button class="btn btn-vt-primary btn-lg px-5" id="btn-start">
+          <i class="bi bi-play-fill me-1"></i> Comenzar
+        </button>
+      </section>
+
+      <!-- ── QUIZ ── -->
+      <section id="quiz-section" style="display:none;">
+        <!-- Progress -->
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <span class="vt-question-num" id="progress-label">Pregunta 1 de 10</span>
+          <span class="text-muted" style="font-size:.85rem;" id="progress-pct">0%</span>
+        </div>
+        <div class="progress mb-4">
+          <div class="progress-bar" id="progress-bar" role="progressbar" style="width:0%"></div>
+        </div>
+
+        <!-- Question -->
+        <p class="vt-question-text" id="question-text"></p>
+
+        <!-- Options -->
+        <div id="options-container"></div>
+
+        <!-- Navigation -->
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <button class="btn btn-vt-outline" id="btn-prev" style="display:none;">
+            <i class="bi bi-arrow-left me-1"></i> Anterior
+          </button>
+          <div class="ms-auto">
+            <button class="btn btn-vt-primary" id="btn-next" disabled>
+              Siguiente <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── RESULT GATE ── -->
+      <section id="result-gate" style="display:none;" class="text-center py-3">
+        <div style="font-size:3.5rem;">✅</div>
+        <h2 class="fw-bold mt-2" style="color:#1e1b4b;">¡Cuestionario completado!</h2>
+        <p class="text-muted mt-2 mb-4">
+          Has respondido todas las preguntas. Cuando estés listo, presiona el botón para conocer tu resultado.
+        </p>
+        <button class="btn btn-vt-primary btn-lg px-5" id="btn-show-result">
+          <i class="bi bi-bar-chart-fill me-2"></i> Ver mi resultado
+        </button>
+      </section>
+
+      <!-- ── RESULT ── -->
+      <section id="result-section" class="animate-in">
+        <div class="text-center mb-4">
+          <div class="vt-result-icon" id="result-icon"></div>
+          <div class="vt-result-title" id="result-specialty"></div>
+          <p class="vt-result-desc" id="result-desc"></p>
+        </div>
+
+        <!-- Score breakdown -->
+        <h6 class="fw-bold text-muted text-uppercase mb-3" style="letter-spacing:.07em; font-size:.8rem;">
+          Distribución de respuestas
+        </h6>
+        <div class="mb-1 d-flex justify-content-between score-label">
+          <span>🌐 Desarrollo Web</span><span id="score-A-val"></span>
+        </div>
+        <div class="score-bar-wrap mb-3">
+          <div class="score-bar-fill bar-A" id="score-A-bar" style="width:0%"></div>
+        </div>
+
+        <div class="mb-1 d-flex justify-content-between score-label">
+          <span>📦 Logística</span><span id="score-B-val"></span>
+        </div>
+        <div class="score-bar-wrap mb-3">
+          <div class="score-bar-fill bar-B" id="score-B-bar" style="width:0%"></div>
+        </div>
+
+        <div class="mb-1 d-flex justify-content-between score-label">
+          <span>📊 Contabilidad</span><span id="score-C-val"></span>
+        </div>
+        <div class="score-bar-wrap mb-4">
+          <div class="score-bar-fill bar-C" id="score-C-bar" style="width:0%"></div>
+        </div>
+
+        <!-- Specialty descriptions -->
+        <div id="spec-cards"></div>
+
+        <!-- Restart -->
+        <div class="text-center mt-4">
+          <button class="btn btn-vt-outline" id="btn-restart">
+            <i class="bi bi-arrow-counterclockwise me-1"></i> Volver a intentarlo
+          </button>
+        </div>
+      </section>
+
+    </div><!-- /vt-card -->
+  </main>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer class="text-center text-muted py-4" style="font-size:.85rem;">
+    VocaTech &copy; 2025 · Orientación Vocacional
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+  // ══════════════════════════════════════════════
+  //  VocaTech – Quiz Engine
+  // ══════════════════════════════════════════════
+
+  const BANK_URL = 'bancopreguntas.json';
+
+  const specialtyMeta = {
+    A: { icon: '🌐', label: 'Desarrollo Web',  color: '#4f46e5',
+         desc: 'Tienes un perfil creativo y tecnológico. Disfrutas construir, diseñar y experimentar con herramientas digitales. La carrera de Desarrollo Web te permitirá crear soluciones innovadoras en internet.' },
+    B: { icon: '📦', label: 'Logística',        color: '#0891b2',
+         desc: 'Eres organizado/a, eficiente y te destacas coordinando personas y recursos. La carrera de Logística te dará las herramientas para gestionar cadenas de suministro y optimizar procesos.' },
+    C: { icon: '📊', label: 'Contabilidad',     color: '#059669',
+         desc: 'Eres detallista, preciso/a y te sientes cómodo/a con datos y números. La carrera de Contabilidad te preparará para gestionar finanzas, auditorías y registros con exactitud.' },
+  };
+
+  // ── State ──────────────────────────────────────
+  let questions   = [];
+  let answers     = {};   // { questionId: 'A'|'B'|'C' }
+  let currentIdx  = 0;
+
+  // ── DOM refs ──────────────────────────────────
+  const introSection   = document.getElementById('intro-section');
+  const quizSection    = document.getElementById('quiz-section');
+  const resultGate     = document.getElementById('result-gate');
+  const resultSection  = document.getElementById('result-section');
+
+  const progressLabel  = document.getElementById('progress-label');
+  const progressPct    = document.getElementById('progress-pct');
+  const progressBar    = document.getElementById('progress-bar');
+  const questionText   = document.getElementById('question-text');
+  const optionsContainer = document.getElementById('options-container');
+
+  const btnStart       = document.getElementById('btn-start');
+  const btnPrev        = document.getElementById('btn-prev');
+  const btnNext        = document.getElementById('btn-next');
+  const btnShowResult  = document.getElementById('btn-show-result');
+  const btnRestart     = document.getElementById('btn-restart');
+  const totalCount     = document.getElementById('total-count');
+
+  // ── Load JSON ─────────────────────────────────
+  async function loadBank() {
+    try {
+      const res  = await fetch(BANK_URL);
+      if (!res.ok) throw new Error('No se pudo cargar el banco de preguntas.');
+      const data = await res.json();
+      questions  = data.preguntas;
+      totalCount.textContent = questions.length;
+    } catch (err) {
+      introSection.innerHTML = `
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          ${err.message}
+        </div>`;
+    }
+  }
+
+  // ── Render question ───────────────────────────
+  function renderQuestion() {
+    const q   = questions[currentIdx];
+    const total = questions.length;
+    const pct = Math.round((currentIdx / total) * 100);
+
+    // Progress
+    progressLabel.textContent = `Pregunta ${currentIdx + 1} de ${total}`;
+    progressPct.textContent   = `${pct}%`;
+    progressBar.style.width   = `${pct}%`;
+    progressBar.setAttribute('aria-valuenow', pct);
+
+    // Question text
+    questionText.textContent = q.pregunta;
+
+    // Options
+    optionsContainer.innerHTML = '';
+    Object.entries(q.opciones).forEach(([letter, text]) => {
+      const btn = document.createElement('button');
+      btn.className = 'vt-option' + (answers[q.id] === letter ? ' selected' : '');
+      btn.setAttribute('aria-pressed', answers[q.id] === letter ? 'true' : 'false');
+      btn.innerHTML = `
+        <span class="badge-letter">${letter}</span>
+        <span>${text}</span>`;
+      btn.addEventListener('click', () => selectOption(letter, btn));
+      optionsContainer.appendChild(btn);
+    });
+
+    // Buttons
+    btnPrev.style.display = currentIdx > 0 ? 'inline-flex' : 'none';
+    updateNextBtn();
+
+    // Animate
+    quizSection.classList.remove('animate-in');
+    void quizSection.offsetWidth; // reflow
+    quizSection.classList.add('animate-in');
+  }
+
+  function selectOption(letter, clickedBtn) {
+    const q = questions[currentIdx];
+    answers[q.id] = letter;
+
+    // Update visual state
+    optionsContainer.querySelectorAll('.vt-option').forEach(b => {
+      b.classList.remove('selected');
+      b.setAttribute('aria-pressed', 'false');
+    });
+    clickedBtn.classList.add('selected');
+    clickedBtn.setAttribute('aria-pressed', 'true');
+
+    updateNextBtn();
+  }
+
+  function updateNextBtn() {
+    const q = questions[currentIdx];
+    const answered = !!answers[q.id];
+    btnNext.disabled = !answered;
+
+    const isLast = currentIdx === questions.length - 1;
+    btnNext.innerHTML = isLast
+      ? 'Finalizar <i class="bi bi-check-lg ms-1"></i>'
+      : 'Siguiente <i class="bi bi-arrow-right ms-1"></i>';
+  }
+
+  // ── Navigation ────────────────────────────────
+  btnNext.addEventListener('click', () => {
+    if (currentIdx < questions.length - 1) {
+      currentIdx++;
+      renderQuestion();
+    } else {
+      showResultGate();
+    }
+  });
+
+  btnPrev.addEventListener('click', () => {
+    if (currentIdx > 0) {
+      currentIdx--;
+      renderQuestion();
+    }
+  });
+
+  // ── Start ─────────────────────────────────────
+  btnStart.addEventListener('click', () => {
+    introSection.style.display = 'none';
+    quizSection.style.display  = 'block';
+    currentIdx = 0;
+    answers    = {};
+    renderQuestion();
+  });
+
+  // ── Result gate ───────────────────────────────
+  function showResultGate() {
+    quizSection.style.display  = 'none';
+    resultGate.style.display   = 'block';
+    resultGate.classList.remove('animate-in');
+    void resultGate.offsetWidth;
+    resultGate.classList.add('animate-in');
+  }
+
+  btnShowResult.addEventListener('click', () => {
+    resultGate.style.display   = 'none';
+    resultSection.style.display = 'block';
+    resultSection.classList.remove('animate-in');
+    void resultSection.offsetWidth;
+    resultSection.classList.add('animate-in');
+    computeAndRender();
+  });
+
+  // ── Compute result ────────────────────────────
+  function computeAndRender() {
+    const counts = { A: 0, B: 0, C: 0 };
+    Object.values(answers).forEach(l => { if (counts[l] !== undefined) counts[l]++; });
+
+    const total  = questions.length;
+    const winner = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
+    const meta   = specialtyMeta[winner];
+
+    // Header
+    document.getElementById('result-icon').textContent     = meta.icon;
+    document.getElementById('result-specialty').textContent = meta.label;
+    document.getElementById('result-desc').textContent      = meta.desc;
+
+    // Score bars (animate after paint)
+    setTimeout(() => {
+      ['A','B','C'].forEach(l => {
+        const pct = total > 0 ? Math.round((counts[l] / total) * 100) : 0;
+        document.getElementById(`score-${l}-bar`).style.width = `${pct}%`;
+        document.getElementById(`score-${l}-val`).textContent = `${counts[l]} / ${total}`;
+      });
+    }, 80);
+
+    // Specialty cards
+    const container = document.getElementById('spec-cards');
+    container.innerHTML = '';
+    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+    sorted.forEach(([letter, count], i) => {
+      const m    = specialtyMeta[letter];
+      const card = document.createElement('div');
+      card.className = `spec-card ${i === 0 ? 'winner' : 'runner'}`;
+      card.innerHTML = `
+        <div class="d-flex align-items-center gap-2">
+          <span style="font-size:1.4rem;">${m.icon}</span>
+          <div>
+            <div class="fw-bold" style="color:${m.color};">
+              ${m.label}
+              ${i === 0 ? '<span class="badge ms-2" style="background:'+m.color+';">Tu perfil</span>' : ''}
+            </div>
+            <div class="text-muted" style="font-size:.88rem;">${count} respuesta${count !== 1 ? 's' : ''}</div>
+          </div>
+        </div>`;
+      container.appendChild(card);
+    });
+  }
+
+  // ── Restart ───────────────────────────────────
+  btnRestart.addEventListener('click', () => {
+    answers    = {};
+    currentIdx = 0;
+    resultSection.style.display = 'none';
+    introSection.style.display  = 'block';
+    introSection.classList.remove('animate-in');
+    void introSection.offsetWidth;
+    introSection.classList.add('animate-in');
+  });
+
+  // ── Init ──────────────────────────────────────
+  loadBank();
+  </script>
+</body>
+</html>
