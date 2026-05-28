@@ -1,0 +1,107 @@
+{
+  "especialidades": {
+    "A": "Desarrollo Web",
+    "B": "Logística",
+    "C": "Contabilidad"
+  },
+  "preguntas": [
+    {
+      "id": 1,
+      "pregunta": "Cuando debes organizar una actividad importante, normalmente tú:",
+      "opciones": {
+        "A": "Piensas en formas diferentes o creativas de hacerlo.",
+        "B": "Te aseguras de que todo esté en orden y a tiempo.",
+        "C": "Revisas recursos, gastos o detalles antes de empezar."
+      }
+    },
+    {
+      "id": 2,
+      "pregunta": "En un trabajo en grupo, generalmente destacas porque:",
+      "opciones": {
+        "A": "Encuentras soluciones rápidas a problemas inesperados.",
+        "B": "Coordinas tareas para que todos sepan qué hacer.",
+        "C": "Mantienes control de datos, cuentas o registros."
+      }
+    },
+    {
+      "id": 3,
+      "pregunta": "Si recibes instrucciones para resolver un reto, tú prefieres:",
+      "opciones": {
+        "A": "Experimentar diferentes métodos hasta lograrlo.",
+        "B": "Seguir pasos organizados y eficientes.",
+        "C": "Analizar cuidadosamente cada detalle antes de actuar."
+      }
+    },
+    {
+      "id": 4,
+      "pregunta": "Cuando usas tecnología, lo que más haces es:",
+      "opciones": {
+        "A": "Modificar, crear o personalizar herramientas digitales.",
+        "B": "Utilizar aplicaciones para coordinar actividades.",
+        "C": "Llevar registros, cálculos o información importante."
+      }
+    },
+    {
+      "id": 5,
+      "pregunta": "¿Qué suelen decir de tu manera de trabajar?",
+      "opciones": {
+        "A": "Que eres creativo(a) y encuentras nuevas ideas.",
+        "B": "Que eres organizado(a) y responsable.",
+        "C": "Que eres detallista y preciso(a)."
+      }
+    },
+    {
+      "id": 6,
+      "pregunta": "Cuando tienes varias tareas pendientes, normalmente:",
+      "opciones": {
+        "A": "Buscas maneras más rápidas o innovadoras de terminarlas.",
+        "B": "Las ordenas por prioridad y tiempo.",
+        "C": "Te concentras en hacer cada una sin errores."
+      }
+    },
+    {
+      "id": 7,
+      "pregunta": "En una situación complicada, tú tiendes a:",
+      "opciones": {
+        "A": "Probar nuevas alternativas para resolverla.",
+        "B": "Mantener el control y distribuir responsabilidades.",
+        "C": "Revisar información y números antes de decidir."
+      }
+    },
+    {
+      "id": 8,
+      "pregunta": "Cuando aprendes algo nuevo, te resulta más cómodo:",
+      "opciones": {
+        "A": "Practicar directamente y experimentar.",
+        "B": "Seguir un proceso paso a paso.",
+        "C": "Entender reglas, datos y detalles importantes."
+      }
+    },
+    {
+      "id": 9,
+      "pregunta": "Si participas en la planificación de un evento, normalmente te encargas de:",
+      "opciones": {
+        "A": "Diseñar ideas o recursos visuales/digitales.",
+        "B": "Coordinar tiempos, materiales y personas.",
+        "C": "Controlar presupuesto y registros."
+      }
+    },
+    {
+      "id": 10,
+      "pregunta": "¿Qué tipo de tarea realizas con más facilidad?",
+      "opciones": {
+        "A": "Crear o mejorar herramientas y soluciones.",
+        "B": "Mantener procesos organizados y eficientes.",
+        "C": "Analizar información y detectar errores."
+      }
+    }
+  ],
+  "resultado": {
+    "descripcion": "Se cuentan las letras seleccionadas por la persona estudiante.",
+    "interpretacion": {
+      "A": "Mayor afinidad con Desarrollo Web.",
+      "B": "Mayor afinidad con Logística.",
+      "C": "Mayor afinidad con Contabilidad."
+    }
+  }
+}
